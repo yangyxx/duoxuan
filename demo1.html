@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="./lib/webix.css">
+    <link rel="stylesheet" type="text/css" href="./lib/samples.css">
+    <script src="./lib/webix.js"></script>
+    <script type="text/javascript" src="./lib/webixdata.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+    <style type="text/css">
+        .hope{
+            position: absolute;
+            z-index: 10;
+            float: left;
+        }
+    </style>
+</head>
+<body>
+<div id="testA"></div>
+<script type="text/javascript" charset="utf-8">
+    var test_columns = [
+        { id:"id",	header:"", css:{"text-align":"right"},  	width:50},
+        { id:"value", sort:"string",	header:"Title",	width:250,
+            template:"{common.treetable()} #value#" }
+    ];
+    for (var i=1; i<5; i++)
+        test_columns.push({ id:"data"+i, width:100, sort:"string" });
+
+    var test_data = [];
+    for (var i=1; i<11; i++){
+        var obj = { id:i, value:"Item at "+i }
+        var data = [];
+        for (var j=1; j<11; j++){
+            var sub = { id:i+"."+j,  value:"Sub-item at "+j };
+            for (var z = 1; z<5; z++)
+                sub["data"+z]=Math.floor(Math.random()*1000);
+            data.push(sub);
+        }
+        obj.data = data;
+        test_data.push(obj);
+    }
+    console.log(test_columns);
+    console.dir(test_data);
+    webix.ready(function(){
+        grida = webix.ui({
+            container:"testA",
+            view:"treetable",
+            leftSplit:2,
+            columns: test_columns,
+            width:800,
+            height:600,
+
+            data: test_data
+        });
+    });
+</script>
+</body>
+</html>

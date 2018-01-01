@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="./lib/webix.css">
+    <link rel="stylesheet" type="text/css" href="./lib/samples.css">
+    <script src="./lib/webix.js"></script>
+    <script type="text/javascript" src="./lib/webixdata.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+    <script type="text/javascript" src="./lib/zh.js"></script>
+    <style type="text/css">
+
+    </style>
+</head>
+<body>
+<div id="testA"></div>
+<script type="text/javascript" charset="utf-8">
+    function getday(num){
+        var d1=new Date(new Date().getTime()+num*24*60*60*1000).getDate();
+        var m1=new Date(new Date().getTime()+num*24*60*60*1000).getMonth()+1;
+        var y1=new Date(new Date().getTime()+num*24*60*60*1000).getFullYear();
+        var t1=y1+"-"+(m1>9?m1:'0'+m1)+"-"+(d1>9?d1:'0'+d1);
+        return t1;
+    }
+    function dat(n){
+        return names1 = [
+            {"id":n+1,"value":"11"+n},
+            {"id":n+2,"value":"22"+n},
+            {"id":n+3,"value":"33"+n}
+        ]
+    }
+    webix.i18n.setLocale("zh-CN");
+    webix.ui({
+        container:"testA",
+        id:'test',
+        view:"form", scroll:false, width:520, elements:[
+            {
+                view:"multicombo",
+                id:"mc",
+                label:"Label1",
+                name:"label1",
+//                value:"2,3",
+                suggest: {
+                    selectAll: true,
+                    body:{
+                        data:dat(1),
+                    }
+                }
+            },
+            {
+                view:"multicombo",
+                id:"mc1",
+                label:"Label2",
+                name:"label2",
+                suggest: {
+                    selectAll: true,
+                    body:{
+                        data:dat(2),
+                    }
+                }
+            },
+
+            {label:"Label3", name:"label3",
+                view:"datepicker",
+                format: "%Y-%m-%d",
+                suggest:{
+                type:"calendar",
+                body:{
+                    minDate:getday(0),
+                    maxDate:getday(29)
+                }
+                }
+            },
+
+            { view:"button", type:"form", value:"Submit data", click:function(){
+                webix.message("<pre>"+JSON.stringify(this.getParentView().getValues(),0,1)+"</pre>");
+            }}
+        ]
+    });
+    $$("mc").attachEvent("onChange", function(newv, oldv){
+        webix.message("Value changed from: "+oldv+" to: "+newv);
+       if(newv){
+           if(newv==2){
+               webix.ui({
+                   view:"multicombo",
+                   id:"mc1",
+                   label:"Label2",
+                   name:"label2",
+                   suggest: {
+                       selectAll: true,
+                       body:{
+                           data:dat(11),
+                       }
+                   }
+               }, $$('test'), $$('mc1'));
+           }else if(newv==3){
+               webix.ui({
+                   view:"multicombo",
+                   id:"mc1",
+                   label:"Label2",
+                   name:"label2",
+                   suggest: {
+                       selectAll: true,
+                       body:{
+                           data:dat(21),
+                       }
+                   }
+               }, $$('test'), $$('mc1'));
+           }else {
+               webix.ui({
+                   view:"multicombo",
+                   id:"mc1",
+                   label:"Label2",
+                   name:"label2",
+                   suggest: {
+                       selectAll: true,
+                       body:{
+                           data:dat(31),
+                       }
+                   }
+               }, $$('test'), $$('mc1'));
+           }
+       }
+    });
+
+
+    webix.ui({
+        container:"testA",
+        view:"treetable",
+        columns:[
+            { id:"id",	header:"", css:{"text-align":"right"},  	width:50},
+            { id:"value",	header:"Film title",	width:250,
+                template:"{common.treetable()} #value#" },
+            { id:"chapter",	header:"Mode",	width:200}
+        ],
+        autoheight:true,
+        autowidth:true,
+
+        data: [
+            { "id":"1", "value":"The Shawshank Redemption", "open":true, "data":[
+                { "id":"1.1", "value":"Part 1", "chapter":"alpha"},
+                { "id":"1.2", "value":"Part 2", "chapter":"beta", "open":true, "data":[
+                    { "id":"1.2.1", "value":"Part 1", "chapter":"beta-twin"},
+                    { "id":"1.2.2", "value":"Part 1", "chapter":"beta-twin"}
+                ]},
+                { "id":"1.3", "value":"Part 3", "chapter":"gamma" }
+            ]},
+            { "id":"2", "value":"The Godfather", "data":[
+                { "id":"2.1", "value":"Part 1", "chapter":"alpha" },
+                { "id":"2.2", "value":"Part 2", "chapter":"beta" }
+            ]}
+        ]
+    });
+</script>
+</body>
+</html>
